@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, resource, signal } from '@angular/core';
 
 import type { Country } from '../../interfaces/country.interface';
 import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country';
 import { SearchInput } from '../../components/search-input/search-input';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -13,22 +14,43 @@ import { SearchInput } from '../../components/search-input/search-input';
 export class ByCapitalPage {
 
   countryService = inject(CountryService);
+  query = signal<string>('');
 
-  isLoading = signal(false);
-  isError = signal<string|null>(null);
-  countries = signal<Country[]>([]);
+  countryResource = resource({
+    params: () => ({ query: this.query() }),
+    loader: async ({ params }) => {
+      if (!params.query) return [];
 
-  onSearch(query: string) {
-    if(this.isLoading()) return;
+      return await firstValueFrom(
+        this.countryService.searchByCapital(params.query)
+      );
+    }
+  });
 
-    this.isLoading.set(true);
-    this.isError.set(null);
 
-    this.countryService.searchByCapital(query)?.subscribe((countries) => {
-        this.isLoading.set(false);
-        this.countries.set(countries);
-        console.log(countries);
-    });
-  }
+  //! Metodo antiguo
+  // isLoading = signal(false);
+  // isError = signal<string|null>(null);
+  // countries = signal<Country[]>([]);
 
+  // onSearch(query: string) {
+  //   if(this.isLoading()) return;
+
+  //   this.isLoading.set(true);
+  //   this.isError.set(null);
+
+  //   this.countryService.searchByCapital(query)
+  //     ?.subscribe({
+  //       next: (countries) => {
+  //         this.countries.set(countries);
+  //         this.isLoading.set(false);
+  //       },
+  //       error: (err) => {
+  //         this.isError.set(err);
+  //         this.countries.set([]);
+  //         this.isLoading.set(false);
+  //       }
+  //     }
+  //   );
+  // }
 }

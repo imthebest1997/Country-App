@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
@@ -26,6 +26,10 @@ export class CountryService {
     }).pipe(
       map((restCountries: RESTCountryResponse) => {
         return CountryMapper.RestCountryResponseToCountries(restCountries.data.objects);
+      }),
+      catchError((error) => {
+        console.error('Error searching countries by capital:', error);
+        return throwError(() => new Error(`Error searching countries by capital with the query: ${query}`));
       })
     );
   }

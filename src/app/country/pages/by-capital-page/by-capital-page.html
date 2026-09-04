@@ -3,10 +3,15 @@
   [searchPlaceholder]="'Buscar por capital'"
 -->
 <country-search-input
-  (value)="onSearch($event)"
+  (value)="query.set($event)"
   searchPlaceholder="Buscar por capital de un país"
 />
 
-@if (countries(); as countriesResponse) {
-  <country-list [countries]="countriesResponse" />
+@if ( countryResource.error() ) {
+  <div class="alert alert-danger mt-2">
+    {{ countryResource.error() }}
+  </div>
+} @if( countryResource.hasValue()) {
+  <country-list [countries]="countryResource.value()!" />
 }
+

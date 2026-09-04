@@ -38,7 +38,9 @@
             {{ country.capital }}
           </td>
           <td>
-            {{ country.population }}
+            <span class="badge bg-primary text-white">
+              {{ country.population | number }}
+            </span>
           </td>
           <td>
             <a
