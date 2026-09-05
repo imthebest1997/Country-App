@@ -1,6 +1,13 @@
 <country-search-input
-  (value)="onSearch($event)"
+  (value)="query.set($event)"
   searchPlaceholder="Buscar por país"
 />
-<country-list [countries]="[]"/>
+
+@if ( countryResource.error() ) {
+  <div class="alert alert-danger mt-2">
+    {{ countryResource.error() }}
+  </div>
+} @if( countryResource.hasValue()) {
+  <country-list [countries]="countryResource.value()!" />
+}
 
