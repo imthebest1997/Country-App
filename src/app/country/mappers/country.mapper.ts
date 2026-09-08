@@ -8,8 +8,10 @@ export class CountryMapper {
       flag: country.flag.emoji,
       flagSvg: country.flag.url_svg,
       name: country.names.translations['spa'].official,
-      capital: country.capitals[0].name,
+      capital: country.capitals[0]?.name ?? 'Sin capital',
       population: country.population,
+      region: country.region,
+      subRegion: country.subregion,
     }
   }
 
