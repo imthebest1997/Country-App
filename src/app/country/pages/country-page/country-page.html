@@ -1,1 +1,13 @@
-<p>country-page works!</p>,
+@if (countryResource.isLoading()) {
+  <div class="text-center">
+    <p>Cargando...</p>
+  </div>
+} @else if (countryResource.error()) {
+  <app-not-found [countryCode]="countryCode"/>
+} @else if (countryResource.value()?.length === 0) {
+  <app-not-found [countryCode]="countryCode"/>
+} @else{
+  <!-- <h1>{{ countryCode }}</h1> -->
+  <h3><b>Nombre:</b> {{ countryResource.value()?.[0]?.name ?? 'No data' }}</h3>
+}
+

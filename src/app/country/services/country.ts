@@ -26,6 +26,10 @@ export class CountryService {
     return this.searchData(region, `${API_URL}/regions/${region}`, 'Error searching countries by region');
   }
 
+  searchCountryByCode(code: string): Observable<Country[]> {
+    return this.searchData(code, `${API_URL}/code?q=${code}`, 'Error searching country by code');
+  }
+
   private searchData(query: string, url: string, errMsg: string): Observable<Country[]> {
     if (query.length === 0) return of([]);
 

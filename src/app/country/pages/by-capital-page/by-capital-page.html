@@ -7,11 +7,9 @@
   searchPlaceholder="Buscar por capital de un país"
 />
 
-@if ( countryResource.error() ) {
-  <div class="alert alert-danger mt-2">
-    {{ countryResource.error() }}
-  </div>
-} @if( countryResource.hasValue()) {
-  <country-list [countries]="countryResource.value()!" />
-}
-
+<country-list
+  [countries]="countryResource.value() ?? []"
+  [errorMessage]="countryResource.error()"
+  [isLoading]="countryResource.isLoading()"
+  [isEmpty]="countryResource.value()?.length === 0"
+/>

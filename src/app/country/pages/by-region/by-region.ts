@@ -1,11 +1,10 @@
 import { Component, input } from '@angular/core';
 
-import { CountryList } from '../../components/country-list/country-list';
 import { RESTCountryResponse } from '../../interfaces/rest-countries.interface';
 
 @Component({
   selector: 'app-by-region',
-  imports: [ CountryList],
+  imports: [ ],
   templateUrl: './by-region.html',
 })
 export class ByRegion {
