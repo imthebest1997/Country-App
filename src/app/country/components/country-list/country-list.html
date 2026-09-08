@@ -52,6 +52,34 @@
           </td>
         </tr>
       }
+
+      <!--  -->
+      @if( errorMessage() ) {
+        <tr>
+          <td colspan="8" class="text-center text-danger">
+            {{ errorMessage() }}
+          </td>
+        </tr>
+      }
+
+      <!--  -->
+      @ if( isEmpty() ) {
+        <tr>
+          <td colspan="7" class="text-center">
+            No hay resultados
+          </td>
+        </tr>
+      }
+
+      <!--  -->
+      @if( isLoading() ) {
+        <tr>
+          <td colspan="7" class="text-center">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Buscando paises...
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 </section>

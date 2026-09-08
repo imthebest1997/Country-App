@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Observable, catchError, delay, map, of, throwError } from 'rxjs';
 
 import { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
@@ -36,9 +36,9 @@ export class CountryService {
       }
     }).pipe(
       map((restCountries: RESTCountryResponse) => {
-        console.log(restCountries);
         return CountryMapper.RestCountryResponseToCountries(restCountries.data.objects);
       }),
+      delay(500),
       catchError((error) => {
         console.error(`${errMsg}: ${error}`);
         return throwError(() => new Error(`${errMsg}: ${query}`));
