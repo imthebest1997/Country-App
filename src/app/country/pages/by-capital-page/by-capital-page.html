@@ -4,6 +4,7 @@
 -->
 <country-search-input
   (value)="query.set($event)"
+  [debounceTime]="500"
   searchPlaceholder="Buscar por capital de un país"
 />
 

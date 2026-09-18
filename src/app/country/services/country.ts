@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, delay, map, of, throwError } from 'rxjs';
+import { Observable, catchError, delay, map, of, tap, throwError } from 'rxjs';
 
 import { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
@@ -13,6 +13,9 @@ const API_URL = 'https://api.restcountries.com/countries/v5';
 export class CountryService {
 
   private http = inject(HttpClient);
+  private queryCacheCapital = new Map<string, Country[]>();
+  private queryCacheCountry = new Map<string, Country[]>();
+  private queryCacheRegion = new Map<string, Country[]>();
 
   searchByCapital(query: string): Observable<Country[]> {
     return this.searchData(query, `${API_URL}/capitals?q=${query}`, 'Error searching countries by capital');
@@ -34,6 +37,11 @@ export class CountryService {
     if (query.length === 0) return of([]);
 
     query = query.toLowerCase().trim();
+
+    if( this.queryCacheCapital.has(query)) {
+      return of(this.queryCacheCapital.get(query) ?? []);
+    }
+
     return this.http.get<RESTCountryResponse>(url, {
       headers: {
         'Authorization': `Bearer ${environment.API_KEY_COUNTRIES}`
@@ -41,6 +49,9 @@ export class CountryService {
     }).pipe(
       map((restCountries: RESTCountryResponse) => {
         return CountryMapper.RestCountryResponseToCountries(restCountries.data.objects);
+      }),
+      tap((countries: Country[]) => {
+        this.queryCacheCapital.set(query, countries);
       }),
       delay(500),
       catchError((error) => {

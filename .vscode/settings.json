@@ -1,8 +1,9 @@
 {
-    "angular-schematics.schematicsDefaultOptions": {
-        "angular-*": {
-            "externalTemplate": true,
-            "skipStyle": true
-        }
+  "task.allowAutomaticTasks": "on",
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "externalTemplate": true,
+      "skipStyle": true
     }
+  }
 }
