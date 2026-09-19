@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { Component, effect, input, linkedSignal, output, signal } from '@angular/core';
 
 @Component({
   selector: 'country-search-input',
@@ -10,12 +10,12 @@ export class SearchInput {
   // Metodo que va a usar el padre
   value = output<string>();
 
-  debounceTime = input<number>(500);
-
   // Placeholder que va a enviar el padre
-  searchPlaceholder = input('Buscar',{transform: trimString});
+  searchPlaceholder = input('Buscar', { transform: trimString });
+  debounceTime = input<number>(3000);
+  initialValue = input<string>('');
 
-  inputValue = signal<string>('');
+  inputValue = linkedSignal<string>(() => this.initialValue() ?? "");
 
 
   debounceEffect = effect((onCleanup) => {
@@ -24,9 +24,9 @@ export class SearchInput {
     const timeout = setTimeout(() => {
       this.value.emit(value); // Emitir el valor después del tiempo de espera
     }, this.debounceTime()); // Tiempo de espera en milisegundos
-    
+
     onCleanup(() => {
-      clearTimeout(timeout);    
+      clearTimeout(timeout);
     }); // Limpiar el timeout si el efecto se vuelve a ejecutar
   });
 

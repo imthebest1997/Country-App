@@ -1,4 +1,5 @@
-import { Component, inject, resource, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, linkedSignal, resource, signal } from '@angular/core';
 
 import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country';
@@ -14,17 +15,27 @@ import { rxResource } from '@angular/core/rxjs-interop';
 export class ByCountry {
 
   countryService = inject(CountryService);
-  query = signal<string>('');
+
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+
+  queryParam = this.activatedRoute.snapshot.queryParamMap.get('query') ?? '';
+  query = linkedSignal<string>(() => this.queryParam);
+
 
   countryResource = rxResource({
     params: () => ({ query: this.query() }),
     stream: ({ params }) => {
       if (!params.query) return of([]);
 
+      this.router.navigate(["/country/by-country"], {
+        queryParams: {
+          query: params.query
+        }
+      });
+
       return this.countryService.searchByCountry(params.query);
     }
   });
-
-
 
 }
